@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>UpgradeBro — Upgrade your phone without opening it</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap">
+<style>
+:root{--bg:#08090c;--panel:rgba(255,255,255,.055);--line:rgba(255,255,255,.1);--tx:#f2f4f8;--mut:#8b93a4;--a:#5eead4;--b:#818cf8;--warn:#fbbf24;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",sans-serif;overflow-x:hidden;
+background-image:radial-gradient(ellipse 60% 40% at 80% -5%,rgba(129,140,248,.22),transparent),radial-gradient(ellipse 50% 35% at 5% 25%,rgba(94,234,212,.12),transparent);background-attachment:fixed}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+section{padding:72px 0}
+h1,h2,h3{line-height:1.05;margin:0;letter-spacing:-.03em}
+h1{font-size:clamp(2.6rem,8vw,5.6rem);font-weight:900}
+h2{font-size:clamp(1.8rem,4.5vw,3rem);font-weight:900;margin-bottom:8px}
+.sub{color:var(--mut);max-width:60ch;margin:0 0 32px}
+.grad{background:linear-gradient(100deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.glass{background:var(--panel);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+button{font:inherit;cursor:pointer}
+.btn{border:0;border-radius:999px;padding:14px 24px;font-weight:700;color:#04110f;background:linear-gradient(100deg,var(--a),var(--b));box-shadow:0 0 28px rgba(94,234,212,.28);transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--line);box-shadow:none}
+:focus-visible{outline:2px solid var(--a);outline-offset:3px}
+.banner{background:#14161d;border-bottom:1px solid var(--line);text-align:center;font-size:.8rem;color:var(--mut);padding:8px 16px}
+nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}
+.logo{font-weight:900;font-size:1.2rem;letter-spacing:-.03em}
+nav a{color:var(--mut);text-decoration:none;margin-left:18px;font-size:.9rem}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:32px;align-items:center;padding-top:40px}
+.tag2{color:var(--mut);margin:14px 0 0;font-style:italic}
+.hero p.lead{font-size:1.1rem;color:#c3c9d6;max-width:52ch;margin:22px 0 28px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.compat{color:var(--mut);font-size:.85rem;margin-top:16px}
+.phone-stage{position:relative;height:460px;display:grid;place-items:center}
+.phone{width:210px;height:420px;border-radius:38px;border:2px solid #2b2f3a;background:linear-gradient(160deg,#151823,#0b0c11);box-shadow:0 0 80px rgba(129,140,248,.35),inset 0 0 30px rgba(94,234,212,.1);padding:14px;position:relative}
+.phone:before{content:"";position:absolute;top:12px;left:50%;width:60px;height:8px;border-radius:9px;background:#000;transform:translateX(-50%)}
+.screen{height:100%;border-radius:26px;background:radial-gradient(circle at 50% 30%,rgba(94,234,212,.3),transparent 60%),#0a0c12;padding:34px 14px 14px;font-size:.72rem;color:var(--mut)}
+.screen b{display:block;color:var(--tx);font-size:1.6rem;margin-bottom:10px}
+.bar{height:6px;border-radius:9px;background:var(--line);margin:8px 0;overflow:hidden}.bar i{display:block;height:100%;width:60%;background:linear-gradient(90deg,var(--a),var(--b))}
+.badge{position:absolute;padding:7px 12px;border-radius:999px;font-size:.72rem;font-weight:700;background:rgba(10,12,18,.8);border:1px solid var(--line);color:var(--a);animation:fl 5s ease-in-out infinite}
+.badge:nth-of-type(1){top:30px;left:0}.badge:nth-of-type(2){top:100px;right:-6px;animation-delay:-1s}.badge:nth-of-type(3){top:230px;left:-10px;animation-delay:-2s}.badge:nth-of-type(4){bottom:70px;right:0;animation-delay:-3s}.badge:nth-of-type(5){bottom:10px;left:16px;animation-delay:-4s}
+@keyframes fl{50%{transform:translateY(-10px)}}
+#detect{padding:22px;max-width:520px}
+#detect h3{font-size:.85rem;color:var(--a);letter-spacing:.08em;margin-bottom:10px}
+#scanmsg{color:var(--mut);min-height:1.5em}
+#found{display:none;margin-top:8px}
+#found dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:10px 0}dt{color:var(--mut)}dd{margin:0;font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px}.chip{border:1px solid var(--a);color:var(--a);border-radius:999px;padding:3px 12px;font-size:.8rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.card{padding:24px;display:flex;flex-direction:column;gap:10px;position:relative;transition:border-color .2s}
+.card:hover{border-color:rgba(94,234,212,.5)}
+.card h3{font-size:1.35rem}.card p{color:var(--mut);margin:0;flex:1;font-size:.92rem}
+.price{font-size:1.5rem;font-weight:900}
+.tagp{position:absolute;top:16px;right:16px;font-size:.68rem;font-weight:700;background:var(--warn);color:#000;border-radius:999px;padding:2px 10px}
+.tagp.parody{background:#f472b6;color:#000}
+.dash{display:grid;grid-template-columns:1.3fr 1fr;gap:16px}
+.dash .glass{padding:24px}
+ul.hist{list-style:none;margin:0;padding:0}ul.hist li{padding:10px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}
+.stat{font-size:2.6rem;font-weight:900}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:16px}.ba .glass{padding:24px}
+.ba h3{margin-bottom:12px;color:var(--mut);font-size:1rem}
+.ba p{display:flex;justify-content:space-between;margin:6px 0}
+.big{text-align:center;margin-top:36px}.big h2{font-size:clamp(2.2rem,7vw,4.5rem)}.big p{color:var(--mut);font-size:1.3rem}
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:16px}.calc .glass{padding:24px}
+label{display:block;font-size:.85rem;color:var(--mut);margin:12px 0 4px}
+select,input[type=range]{width:100%}
+select{background:#12151c;color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:10px}
+.ck{display:flex;gap:10px;align-items:center;color:var(--tx);font-size:.95rem;margin:8px 0}
+.res p{display:flex;justify-content:space-between;font-size:1.15rem;margin:8px 0}.res b{color:var(--a)}
+.fine{color:var(--mut);font-size:.8rem;margin-top:14px}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.tier{padding:26px;display:flex;flex-direction:column;gap:6px}
+.tier.hot{border-color:var(--b);box-shadow:0 0 50px rgba(129,140,248,.25)}
+.tier ul{list-style:none;padding:0;margin:8px 0 16px;flex:1;color:#c3c9d6;font-size:.92rem}.tier li{padding:3px 0}
+.cert{display:none;margin-top:24px;padding:36px;text-align:center;border:1px solid var(--a);background:linear-gradient(160deg,rgba(94,234,212,.09),rgba(129,140,248,.09))}
+.cert h3{font-size:1.8rem}.cert .stamp{display:inline-block;margin-top:14px;border:2px solid var(--warn);color:var(--warn);padding:4px 14px;border-radius:8px;transform:rotate(-4deg);font-weight:900}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cols .glass{padding:24px}
+footer{border-top:1px solid var(--line);padding:32px 0 48px;color:var(--mut);font-size:.85rem}
+#modal{position:fixed;inset:0;background:rgba(3,4,7,.8);backdrop-filter:blur(8px);display:none;place-items:center;z-index:9;padding:20px}
+#modal.on{display:grid}
+.mbox{max-width:480px;width:100%;padding:30px;text-align:center;background:#0e1016;animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.mbox h3{font-size:1.3rem}.pct{font-size:3.4rem;font-weight:900;margin:8px 0}
+.track{height:12px;border-radius:9px;background:var(--line);overflow:hidden}.track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--a),var(--b));transition:width .4s}
+.stage{color:var(--a);font-weight:700;margin-top:14px;min-height:1.5em}.msg{color:var(--mut);min-height:3em;margin-top:4px}
+.warnbox{border:1px solid var(--warn);color:var(--warn);border-radius:14px;padding:14px;margin:16px 0;display:none}
+.done{display:none}.done h3{font-size:1.8rem}.done .jk{font-size:2rem;font-weight:900;margin:14px 0 4px}
+.stuff{margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media(max-width:820px){.hero,.dash,.calc,.cols{grid-template-columns:1fr}.phone-stage{height:440px}section{padding:52px 0}nav a{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.orb{position:fixed;width:520px;height:520px;border-radius:50%;filter:blur(90px);opacity:.26;z-index:-1;pointer-events:none;animation:drift 18s ease-in-out infinite alternate}
+.o1{background:#818cf8;top:-140px;right:-120px}.o2{background:#5eead4;bottom:-200px;left:-160px;animation-delay:-8s;opacity:.15}
+@keyframes drift{to{transform:translate(-60px,50px) scale(1.15)}}
+.grad{background-image:linear-gradient(100deg,var(--a),var(--b),var(--a));background-size:200% 100%;animation:sh 7s linear infinite}
+@keyframes sh{to{background-position:200% 0}}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;margin:0 -20px;padding:14px 20px;background:rgba(8,9,12,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.phone{transform:rotate(-5deg);animation:pf 6s ease-in-out infinite}
+@keyframes pf{50%{transform:rotate(-5deg) translateY(-12px)}}
+.an{animation:bw 3s ease-in-out infinite alternate}@keyframes bw{from{width:20%}to{width:92%}}
+.tick{color:var(--a);font-weight:700;font-size:.9rem;min-height:2.6em}
+.cta .btn:first-child{animation:pulse 2.6s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 46px rgba(94,234,212,.55)}}
+.marq{overflow:hidden;border-block:1px solid var(--line);margin:56px -20px 0;padding:14px 0;color:var(--mut);font-size:.9rem;white-space:nowrap}
+.marq div{display:inline-block;animation:mq 40s linear infinite}.marq span{margin:0 28px}
+@keyframes mq{to{transform:translateX(-50%)}}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:32px}
+.stats .glass{padding:20px;text-align:center}.stats b{display:block;font-size:2rem;font-weight:900}.stats span{color:var(--mut);font-size:.85rem}
+.ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(135deg,rgba(94,234,212,.25),rgba(129,140,248,.25));border:1px solid var(--line)}
+.card{overflow:hidden}.card:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .25s;background:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(94,234,212,.16),transparent)}
+.card:hover:before{opacity:1}.card:hover{transform:translateY(-4px)}.card{transition:transform .2s,border-color .2s}
+.quotes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.quotes .glass{padding:24px}.quotes p{font-size:1.05rem;margin:0 0 14px}.quotes small{color:var(--mut)}
+.tier{position:relative}.ptag{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(100deg,var(--a),var(--b));color:#04110f;font-weight:700;font-size:.72rem;padding:3px 14px;border-radius:999px}
+.cf{position:fixed;top:-20px;width:8px;height:14px;z-index:20;pointer-events:none;animation:cf 2.6s ease-in forwards}
+@keyframes cf{to{transform:translateY(110vh) rotate(720deg)}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div class="banner">UpgradeBro is a parody website. No physical hardware is modified, upgraded, or downloaded.</div>
+<div class="wrap">
+<nav><span class="logo">Upgrade<span class="grad">Bro</span></span><div><a href="#store">Store</a><a href="#calc">Calculator</a><a href="#bundles">Bundles</a><a href="#cert">Certificate</a></div></nav>
+
+<header class="hero">
+<div>
+<h1>Upgrade your phone.<br><span class="grad">Without opening it.</span></h1>
+<p class="tag2">Download hardware upgrades. Totally legitimate. Probably.</p>
+<p class="lead">Download more RAM. Increase your camera megapixels. Add storage. Boost your battery. Why buy new hardware when you can simply download it?</p>
+<div class="cta"><button class="btn" data-up="+128 GB Storage" data-kind="storage">Download an upgrade</button><a href="#store"><button class="btn ghost">See available upgrades</button></a></div>
+<div class="compat">Compatible with: Apparently everything.</div>
+</div>
+<div class="phone-stage" aria-hidden="true">
+<div class="phone"><div class="screen"><b id="clk">9:41</b><div class="tick" id="tick">Storage +128 GB*</div><div class="bar"><i class="an"></i></div><div class="bar"><i class="an" style="animation-delay:-1s"></i></div><div class="bar"><i class="an" style="animation-delay:-2s"></i></div><small>*Hardware: unchanged</small></div></div>
+<span class="badge">+128 GB STORAGE</span><span class="badge">+8 GB RAM</span><span class="badge">+50 MP CAMERA</span><span class="badge">+20% BATTERY</span><span class="badge">+1× PROCESSOR</span>
+</div>
+</header>
+
+<div class="glass" id="detect" role="status" aria-live="polite">
+<h3>DEVICE DETECTED</h3>
+<div id="scanmsg">Scanning device...</div>
+<div id="found">
+<strong>DEVICE FOUND</strong>
+<dl><dt>Device</dt><dd id="dn">—</dd><dt>Current storage</dt><dd>128 GB</dd><dt>Current RAM</dt><dd>8 GB</dd><dt>Camera</dt><dd>50 MP</dd><dt>Battery</dt><dd>5000 mAh</dd></dl>
+<div>Available “upgrades”</div>
+<div class="chips" style="margin-top:8px"><span class="chip">+128 GB Storage</span><span class="chip">+8 GB RAM</span><span class="chip">+50 MP Camera</span><span class="chip">+20% Battery</span></div>
+<div class="fine">Simulated. Only your browser’s device type is read; nothing is collected or sent anywhere.</div>
+</div>
+</div>
+
+<div class="marq" aria-hidden="true"><div><span>“Physics called. We didn’t answer.”—Imaginary Tech Weekly</span><span>“My phone questioned my decisions.”—Someone, probably</span><span>“Zero screws turned. Ten out of ten.”—The Department of Nothing</span><span>“Now with 7G, which does not exist.”—Future Gadgets Digest</span><span>“Physics called. We didn’t answer.”—Imaginary Tech Weekly</span><span>“My phone questioned my decisions.”—Someone, probably</span><span>“Zero screws turned. Ten out of ten.”—The Department of Nothing</span><span>“Now with 7G, which does not exist.”—Future Gadgets Digest</span></div></div><div class="stats"><div class="glass"><b class="grad">1,000,000+</b><span>imaginary downloads*</span></div><div class="glass"><b class="grad">0</b><span>screws turned</span></div><div class="glass"><b class="grad">99%</b><span>phones resisting progress</span></div><div class="glass"><b class="grad">7G</b><span>coverage: theoretical</span></div></div>
+<section id="store">
+<h2>The Upgrade Store</h2>
+<p class="sub">Why replace hardware when you can download it? (All items are fictional. Prices are pretend.)</p>
+<div class="grid" id="grid"></div>
+</section>
+
+<section id="mine">
+<h2>My upgrades</h2>
+<p class="sub">Everything you have “installed” this session.</p>
+<div class="dash"><div class="glass"><ul class="hist" id="hist"><li style="color:var(--mut)">Nothing yet. Try the store above.</li></ul></div>
+<div class="glass"><div>Total upgrades installed</div><div class="stat" id="tot">0</div><div>Physical hardware changed</div><div class="stat grad">0</div></div></div>
+</section>
+
+<section>
+<h2>Before vs after</h2>
+<p class="sub">Independent lab results.</p>
+<div class="ba"><div class="glass"><h3>Before</h3><p><span>Storage</span><b>128 GB</b></p><p><span>RAM</span><b>8 GB</b></p><p><span>Camera</span><b>50 MP</b></p><p><span>Battery</span><b>5000 mAh</b></p></div>
+<div class="glass"><h3>After</h3><p><span>Storage</span><b>128 GB</b></p><p><span>RAM</span><b>8 GB</b></p><p><span>Camera</span><b>50 MP</b></p><p><span>Battery</span><b>5000 mAh</b></p></div></div>
+<div class="big"><h2 class="grad">“Absolutely revolutionary.”</h2><p>Nothing changed.</p></div>
+</section>
+
+<section id="calc">
+<h2>How powerful is your phone now?</h2>
+<p class="sub">Enter your specs, tick some fictional upgrades.</p>
+<div class="calc"><div class="glass">
+<label for="cs">Current storage</label><select id="cs"><option>64</option><option selected>128</option><option>256</option><option>512</option></select>
+<label for="cr">RAM (GB)</label><select id="cr"><option>4</option><option>6</option><option selected>8</option><option>12</option><option>16</option></select>
+<label for="cc">Camera (MP)</label><select id="cc"><option>12</option><option>48</option><option selected>50</option><option>64</option><option>108</option><option>200</option></select>
+<label for="cb">Battery: <span id="cbv">5000</span> mAh</label><input type="range" id="cb" min="3000" max="7000" step="100" value="5000">
+<label>Fictional upgrades</label>
+<label class="ck"><input type="checkbox" id="u1" checked> +128 GB Storage</label>
+<label class="ck"><input type="checkbox" id="u2" checked> +8 GB RAM</label>
+<label class="ck"><input type="checkbox" id="u3" checked> +50 MP Camera</label>
+<label class="ck"><input type="checkbox" id="u4" checked> +20% Battery</label>
+</div>
+<div class="glass res"><h3 style="margin-bottom:12px">Your new phone</h3><p><span>Storage</span><b id="rs"></b></p><p><span>RAM</span><b id="rr"></b></p><p><span>Camera</span><b id="rc"></b></p><p><span>Battery</span><b id="rb"></b></p>
+<div class="fine">*According to our completely reliable imaginary engineering department.</div></div></div>
+</section>
+
+<section>
+<h2>Loved by fictional customers</h2>
+<p class="sub">Every testimonial below is made up. So is the enthusiasm.</p>
+<div class="quotes"><div class="glass"><p>“I downloaded 512 GB and my photos are still exactly as many as before. Stunning.”</p><small>Aarav, a fictional person</small></div><div class="glass"><p>“The progress bar reached 99% and I felt something. Growth, maybe.”</p><small>Meera, entirely invented</small></div><div class="glass"><p>“I became unreasonably powerful. My phone disagrees.”</p><small>Rohan, not a real customer</small></div></div>
+</section>
+<section id="bundles">
+<h2>Upgrade bundles</h2>
+<p class="sub">Pricing and purchases are fictional. Nobody is charged. There is no checkout.</p>
+<div class="tiers">
+<div class="glass tier"><h3>Basic</h3><div class="price">₹499</div><ul><li>+64 GB Storage</li><li>+4 GB RAM</li><li>+10% Battery</li></ul><button class="btn ghost" data-up="Basic Bundle" data-kind="bundle">Get Basic</button></div>
+<div class="glass tier hot"><span class="ptag">Most popular</span><h3>Pro</h3><div class="price">₹1,499</div><ul><li>+128 GB Storage</li><li>+8 GB RAM</li><li>+50 MP Camera</li><li>+20% Battery</li></ul><button class="btn" data-up="Pro Bundle" data-kind="bundle">Get Pro</button></div>
+<div class="glass tier"><h3>Ultra</h3><div class="price">₹4,999</div><ul><li>+512 GB Storage</li><li>+16 GB RAM</li><li>+108 MP Camera</li><li>+50% Battery</li><li>+120Hz Display</li></ul><button class="btn ghost" data-up="Ultra Bundle" data-kind="bundle">Get Ultra</button></div>
+<div class="glass tier"><h3>God Mode</h3><div class="price">₹9,999</div><ul><li>Unlimited Storage</li><li>Unlimited RAM</li><li>1,000 MP Camera</li><li>100% Battery</li><li>8K Display</li><li>Quantum Processor</li></ul><button class="btn" data-up="God Mode Bundle" data-kind="bundle">Become unreasonably powerful</button></div>
+</div>
+</section>
+
+<section id="cert">
+<h2>Upgrade certificate</h2>
+<p class="sub">Share proof of your entirely imaginary progress.</p>
+<button class="btn" id="gen">Generate my upgrade certificate</button>
+<div class="glass cert" id="certbox"><div class="fine">UPGRADEBRO CERTIFIED</div><h3 id="cd">Device</h3><p id="cu" style="color:var(--mut)"></p><p>Physical hardware changed: <b>0</b></p><span class="stamp">100% PARODY</span>
+<div class="stuff"><button class="btn ghost" id="cp">Copy share text</button></div></div>
+</section>
+
+<section>
+<h2>How UpgradeBro could pay for itself</h2>
+<p class="sub">Honest, clearly labeled ideas. Nothing below is live.</p>
+<div class="cols"><div class="glass"><h3 style="margin-bottom:8px">Real gear, real links</h3><p class="fine">Affiliate placeholders for actual phones, microSD cards, power banks, screen protectors and accessories, always marked as affiliate.</p></div>
+<div class="glass"><h3 style="margin-bottom:8px">More ways</h3><p class="fine">Display ads, sponsored tech jokes, cosmetic themes, shareable certificates and merch. Sponsored content would always be labeled.</p></div></div>
+</section>
+</div>
+
+<footer><div class="wrap">UpgradeBro is a parody website. No physical hardware is modified, upgraded, or downloaded. Not affiliated with any phone manufacturer. Product names shown are jokes. No payments are taken and no personal data is collected.</div></footer>
+
+<div id="modal" role="dialog" aria-modal="true" aria-labelledby="mt"><div class="glass mbox">
+<div id="run">
+<h3 id="mt">INSTALLING</h3><div class="pct" id="pc">0%</div><div class="track"><i id="tr"></i></div>
+<div class="stage" id="sg">Initializing</div><div class="msg" id="ms"></div>
+<div class="warnbox" id="wb"><strong>WARNING</strong><br>Your phone appears to be resisting technological progress.<div class="stuff"><button class="btn" id="go">Continue anyway</button></div></div>
+</div>
+<div class="done" id="dn2"><h3 id="dt">UPGRADE COMPLETE</h3><p id="dd" style="color:var(--mut)"></p><div class="jk">Just kidding. 😂</div><p>Your physical hardware remains exactly the same.</p>
+<div class="stuff"><button class="btn" id="again">Try another upgrade</button></div></div>
+<div class="fine">Parody. Nothing is being installed.</div>
+</div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const UP=[
+["+128 GB Storage","Instantly increase your phone's storage without inserting a memory card.","₹499","Download","POPULAR"],
+["+8 GB RAM","Give your phone 8 additional gigabytes of absolutely imaginary RAM.","₹299","Download"],
+["+50 MP Camera","Transform your existing camera sensor into something it definitely isn't.","₹799","Upgrade camera"],
+["+20% Battery","Download additional battery capacity. Physics has been temporarily disabled.","₹399","Boost battery"],
+["Gorilla Glass 8","Install a stronger screen protector without touching the screen.","₹199","Install glass"],
+["Snapdragon Ultra Upgrade","Download a faster processor directly into your motherboard.","₹1,999","Download CPU","PARODY"],
+["5G → 7G","Future-proof your phone approximately three generations ahead.","₹999","Enable 7G"],
+["120Hz Display","Upgrade your screen refresh rate through the power of software and questionable science.","₹699","Install 120Hz"]];
+$("#grid").innerHTML=UP.map((u,i)=>`<article class="glass card">${u[4]?`<span class="tagp ${u[4]=="PARODY"?"parody":""}">${u[4]}</span>`:""}<div class="ico">${["💾","🧠","📷","🔋","🛡","⚡","📡","🖥"][i]}</div><h3>${u[0]}</h3><p>${u[1]}</p><div class="price">${u[2]}</div><button class="btn" data-up="${u[0]}">${u[3]}</button></article>`).join("");
+
+// device detection (browser type only, simulated specs)
+(function(){
+const ua=navigator.userAgent,m=/iPhone|iPad/.test(ua)?"Generic iOS Device":/Android/.test(ua)?"Generic Android Phone":/Mobi/.test(ua)?"Generic Mobile Device":"Desktop Browser (pretending to be a phone)";
+const dev=/Android|iPhone|iPad|Mobi/.test(ua)?m:"Samsung Galaxy A54 (example)";
+$("#dn").textContent=dev;
+const steps=["Scanning device...","Reading hardware...","Checking available upgrade slots...","Analyzing questionable engineering..."];
+let i=0;const t=setInterval(()=>{$("#scanmsg").textContent=steps[i++]||"";if(i>steps.length){clearInterval(t);$("#scanmsg").style.display="none";$("#found").style.display="block"}},800);
+window.DEV=dev;
+setInterval(()=>{const d=new Date();$("#clk").textContent=(d.getHours()%12||12)+":"+String(d.getMinutes()).padStart(2,"0")},1e4);
+})();
+
+// history
+let hist=[];try{hist=JSON.parse(localStorage.getItem("ub_hist")||"[]")}catch(e){}
+function renderHist(){$("#tot").textContent=hist.length;if(hist.length)$("#hist").innerHTML=hist.map(h=>`<li><span>${h}</span><span style="color:var(--a)">Downloaded</span></li>`).join("")}
+renderHist();
+
+// install modal
+const MSG=["Downloading motherboard...","Compressing RAM...","Installing camera sensor...","Negotiating with physics...","Asking the battery for permission...","Searching for unused processor cores...","Rewriting the laws of thermodynamics...","Contacting the motherboard...","Installing imaginary components...","Calibrating photons...","Increasing megapixels...","Removing physical limitations...","Almost there...","Please do not throw your phone.","Your phone is questioning this decision.","Hardware.exe has stopped making sense."];
+const STG=[[10,"Initializing"],[25,"Scanning device"],[45,"Preparing upgrade"],[65,"Downloading hardware"],[80,"Installing imaginary components"],[95,"Calibrating"],[99,"Finalizing"],[100,"Almost definitely working"]];
+const SPEC={"+128 GB Storage":["Locating empty storage slot...","Optimizing imaginary storage..."],"+8 GB RAM":["Locating empty RAM slot...","Optimizing imaginary memory..."],"+50 MP Camera":["Locating spare pixels...","Optimizing imaginary pixels..."],"+20% Battery":["Locating spare electrons...","Optimizing imaginary capacity..."]};
+let timer,cur,pct,paused,cont,mt;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function openM(name){
+ cur=name;pct=0;cont=false;$("#modal").classList.add("on");$("#run").style.display="block";$("#dn2").style.display="none";$("#wb").style.display="none";
+ $("#mt").textContent="INSTALLING "+name.toUpperCase();set(0);run();
+}
+function set(p){pct=p;$("#pc").textContent=Math.round(p)+"%";$("#tr").style.width=p+"%";const s=STG.find(x=>p<=x[0])||STG[7];$("#sg").textContent=s[1]}
+function say(t){$("#ms").textContent=t}
+async function run(){
+ const id=timer=Symbol();const sp=SPEC[cur]||["Locating empty upgrade slot...","Optimizing imaginary components..."];
+ say("Preparing hardware package...");await wait(800);if(id!==timer)return;
+ say("Scanning motherboard...");await wait(800);if(id!==timer)return;
+ say(sp[0]);await wait(800);
+ const marks=[13,27,46,73,99];let m=0;
+ while(pct<99&&id===timer){
+  const tgt=marks[m];
+  while(pct<tgt&&id===timer){set(Math.min(tgt,pct+1+Math.random()*3));if(Math.random()<.4)say(MSG[Math.random()*MSG.length|0]);await wait(140+Math.random()*120)}
+  if(id!==timer)return;
+  if(tgt===73){say(sp[1]);await wait(1600)}
+  else if(tgt===99){say("Applying final hardware changes...")}
+  else if(Math.random()<.6)await wait(900+Math.random()*900);
+  m++;
+ }
+ if(id!==timer)return;
+ await wait(3500);if(id!==timer)return;
+ $("#wb").style.display="block";$(".mbox").animate([{transform:"translateX(-8px)"},{transform:"translateX(8px)"},{transform:"none"}],{duration:280,iterations:3});
+ await new Promise(r=>{$("#go").onclick=r});if(id!==timer)return;
+ $("#wb").style.display="none";
+ while(pct<100&&id===timer){set(Math.min(100,pct+.4));if(pct>99.2)say("Almost definitely working");await wait(90)}
+ if(id!==timer)return;
+ set(100);await wait(500);finish();
+}
+function finish(){
+ $("#run").style.display="none";$("#dn2").style.display="block";
+ $("#dd").textContent=cur+" successfully downloaded.";
+ confetti();hist.push(cur);try{localStorage.setItem("ub_hist",JSON.stringify(hist))}catch(e){}renderHist();
+}
+function closeM(){timer=null;$("#modal").classList.remove("on");$("#go").onclick=null}
+$("#again").onclick=()=>{closeM();location.hash="#store"};
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeM()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeM()});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-up]");if(b)openM(b.dataset.up)});
+
+// calculator
+function calc(){
+ $("#cbv").textContent=$("#cb").value;
+ $("#rs").textContent=(+$("#cs").value+($("#u1").checked?128:0))*1+" GB*";
+ $("#rr").textContent=(+$("#cr").value+($("#u2").checked?8:0))+" GB*";
+ $("#rc").textContent=(+$("#cc").value+($("#u3").checked?50:0))+" MP*";
+ $("#rb").textContent=Math.round($("#cb").value*($("#u4").checked?1.2:1))+" mAh*";
+}
+document.querySelectorAll("#calc select,#calc input").forEach(e=>e.addEventListener("input",calc));calc();
+
+document.addEventListener("pointermove",e=>{const c=e.target.closest&&e.target.closest(".card");if(c){const b=c.getBoundingClientRect();c.style.setProperty("--mx",e.clientX-b.left+"px");c.style.setProperty("--my",e.clientY-b.top+"px")}});
+const TK=["Storage +128 GB*","RAM +8 GB*","Camera +50 MP*","Battery +20%*","Physics: negotiating..."];let ti=0;setInterval(()=>{$("#tick").textContent=TK[++ti%TK.length]},1800);
+function confetti(){const c=["#5eead4","#818cf8","#fbbf24","#f472b6"];for(let i=0;i<48;i++){const d=document.createElement("i");d.className="cf";d.style.left=Math.random()*100+"vw";d.style.background=c[i%4];d.style.animationDelay=Math.random()*.5+"s";document.body.appendChild(d);setTimeout(()=>d.remove(),3400)}}
+// certificate
+$("#gen").onclick=()=>{
+ $("#cd").textContent="Device: "+window.DEV;
+ $("#cu").textContent=hist.length?"Upgrades: "+[...new Set(hist)].join(", "):"Upgrades: none yet (try the store), which is also fine";
+ $("#certbox").style.display="block";
+};
+$("#cp").onclick=async()=>{
+ const t="I just \"downloaded\" "+hist.length+" hardware upgrades on UpgradeBro. Physical hardware changed: 0. (Parody site)";
+ try{await navigator.clipboard.writeText(t);$("#cp").textContent="Copied"}catch(e){$("#cp").textContent="Copy failed"}
+};
+</script>
+</body>
+</html>
